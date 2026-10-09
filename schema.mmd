@@ -1,0 +1,196 @@
+erDiagram
+    PAIS |o--o{ UF : "abrange"
+    UF ||--o{ MUNICIPIO : "contém"
+    UF ||--o{ ESTABELECIMENTO : "sedia"
+    MUNICIPIO ||--o{ ESTABELECIMENTO : "localiza"
+    CNAE ||--o{ ESTABELECIMENTO : "atividade principal"
+    PAIS |o--o{ ESTABELECIMENTO : "sede no exterior"
+    NATUREZA_JURIDICA ||--o{ EMPRESA : "classifica"
+    QUALIFICACAO_SOCIO ||--o{ EMPRESA : "qualifica responsável"
+    QUALIFICACAO_SOCIO ||--o{ SOCIO : "qualifica sócio"
+    QUALIFICACAO_SOCIO |o--o{ SOCIO : "qualifica representante"
+    PAIS |o--o{ SOCIO : "origem do estrangeiro"
+
+    EMPRESA ||--|{ ESTABELECIMENTO : "possui"
+    EMPRESA ||--o| SIMPLES : "opta"
+    EMPRESA ||--o{ SOCIO : "tem no quadro"
+    EMPRESA |o--o{ SOCIO : "participa como sócia PJ"
+    ESTABELECIMENTO ||--o{ ESTABELECIMENTO_CNAE_SECUNDARIO : "exerce"
+    CNAE ||--o{ ESTABELECIMENTO_CNAE_SECUNDARIO : "atividade secundária"
+
+    PESSOA_FISICA ||--o{ PESSOA_IDENTIFICADOR : "possui"
+    PESSOA_FISICA |o--o{ SOCIO : "é sócia"
+    PESSOA_FISICA |o--o{ SOCIO : "representa legalmente"
+
+    PROGRAMA ||--o{ PAGAMENTO : "paga"
+    PESSOA_FISICA ||--o{ PAGAMENTO : "recebe"
+    MUNICIPIO ||--o{ PAGAMENTO : "local do beneficiário"
+    PAGAMENTO ||--o| PAGAMENTO_GAS_DO_POVO : "detalha vale"
+    PAGAMENTO ||--o| PAGAMENTO_PE_DE_MEIA : "detalha parcela"
+    ESTABELECIMENTO |o--o{ PAGAMENTO_GAS_DO_POVO : "revenda (FK lógica)"
+    PESSOA_FISICA |o--o{ PAGAMENTO_PE_DE_MEIA : "responsável legal"
+    PROGRAMA ||--o{ RESUMO_MUNICIPIO_MES : "totaliza"
+    MUNICIPIO ||--o{ RESUMO_MUNICIPIO_MES : "totaliza"
+
+    PESSOA_FISICA ||--o{ PEP_EXERCICIO : "exerce"
+    FUNCAO ||--o{ PEP_EXERCICIO : "função exercida"
+    ORGAO ||--o{ PEP_EXERCICIO : "onde exerce"
+
+    UF {
+        char(2) sigla PK
+        smallint codigo_ibge UK
+        smallint pais_codigo FK "nulo se a UF for exterior"
+        text nome
+    }
+    MUNICIPIO {
+        int municipio_id PK
+        int codigo_siafi UK
+        int codigo_ibge UK
+        text nome
+        char(2) uf_sigla FK
+    }
+    PAIS {
+        smallint codigo PK
+        text nome
+    }
+    CNAE {
+        char(7) codigo PK
+        text descricao
+    }
+    NATUREZA_JURIDICA {
+        smallint codigo PK
+        text descricao
+    }
+    QUALIFICACAO_SOCIO {
+        smallint codigo PK
+        text descricao
+    }
+    PESSOA_FISICA {
+        bigint pessoa_id PK
+        char(6) cpf_miolo UK "único com nome_normalizado"
+        text nome
+        text nome_normalizado UK "único com cpf_miolo"
+    }
+    PESSOA_IDENTIFICADOR {
+        text tipo PK "NIS e futuros"
+        text valor PK
+        bigint pessoa_id FK
+    }
+    EMPRESA {
+        char(8) cnpj_basico PK
+        text razao_social
+        smallint natureza_juridica_codigo FK
+        smallint qualificacao_responsavel_codigo FK
+        numeric capital_social
+        smallint porte
+        text ente_federativo_responsavel
+        smallint situacao_judicial "derivada da razão social"
+    }
+    ESTABELECIMENTO {
+        char(14) cnpj PK
+        char(8) cnpj_basico FK
+        smallint matriz_filial
+        text nome_fantasia
+        smallint situacao_cadastral
+        date data_situacao_cadastral
+        smallint motivo_situacao_cadastral
+        date data_inicio_atividade
+        char(7) cnae_principal_codigo FK
+        text logradouro "mais tipo, número, complemento e bairro"
+        char(8) cep
+        char(2) uf_sigla FK
+        int municipio_id FK
+        text nome_cidade_exterior
+        smallint pais_codigo FK
+        text telefone1 "mais DDD, telefone2 e fax"
+        text email
+        text situacao_especial
+        date data_situacao_especial
+    }
+    ESTABELECIMENTO_CNAE_SECUNDARIO {
+        char(14) cnpj PK, FK
+        char(7) cnae_codigo PK, FK
+    }
+    SIMPLES {
+        char(8) cnpj_basico PK, FK
+        boolean opcao_simples
+        date data_opcao_simples
+        date data_exclusao_simples
+        boolean opcao_mei
+        date data_opcao_mei
+        date data_exclusao_mei
+    }
+    SOCIO {
+        bigint socio_id PK
+        char(8) cnpj_basico FK
+        smallint tipo_socio "1 PJ, 2 PF, 3 estrangeiro"
+        bigint pessoa_id FK "quando PF"
+        char(8) socio_pj_cnpj_basico FK "quando PJ"
+        text nome_socio
+        smallint qualificacao_codigo FK
+        date data_entrada
+        smallint pais_codigo FK
+        bigint representante_pessoa_id FK
+        smallint representante_qualificacao_codigo FK
+        smallint faixa_etaria
+    }
+    PROGRAMA {
+        smallint programa_id PK
+        text sigla UK
+        text nome
+    }
+    PAGAMENTO {
+        date mes_folha PK "chave de partição"
+        bigint pagamento_id PK
+        smallint programa_id FK
+        bigint pessoa_id FK
+        int municipio_id FK
+        date mes_competencia
+        date data_pagamento
+        numeric valor
+    }
+    PAGAMENTO_GAS_DO_POVO {
+        date mes_folha PK, FK
+        bigint pagamento_id PK, FK
+        char(14) estabelecimento_cnpj FK "lógica, sem constraint"
+        smallint qtd_pessoas_familia
+        smallint validade_meses
+        date data_inicio_vigencia
+        date data_fim_vigencia
+        date data_retirada
+    }
+    PAGAMENTO_PE_DE_MEIA {
+        date mes_folha PK, FK
+        bigint pagamento_id PK, FK
+        smallint tipo_parcela "1 matrícula, 2 frequência, 3 conclusão, 4 ENEM"
+        date periodo_parcela
+        text etapa_ensino
+        bigint responsavel_pessoa_id FK
+    }
+    RESUMO_MUNICIPIO_MES {
+        smallint programa_id PK, FK
+        int municipio_id PK, FK
+        date mes_folha PK
+        int qtd_beneficiarios
+        int qtd_parcelas
+        numeric valor_total
+    }
+    FUNCAO {
+        int funcao_id PK
+        text sigla
+        text descricao
+        text nivel
+    }
+    ORGAO {
+        int orgao_id PK
+        text nome UK
+    }
+    PEP_EXERCICIO {
+        bigint pep_exercicio_id PK
+        bigint pessoa_id FK
+        int funcao_id FK
+        int orgao_id FK
+        date data_inicio
+        date data_fim
+        date data_fim_carencia
+    }
