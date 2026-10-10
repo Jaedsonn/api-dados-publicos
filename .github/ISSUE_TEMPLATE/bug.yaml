@@ -1,0 +1,64 @@
+name: Bug
+description: Algo não funciona como esperado
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: comportamento-atual
+    attributes:
+      label: O que aconteceu
+      description: Descreva o comportamento observado.
+    validations:
+      required: true
+
+  - type: textarea
+    id: comportamento-esperado
+    attributes:
+      label: O que era esperado
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      description: Passos, comando ou requisição que dispara o problema.
+      placeholder: |
+        1. Subir o banco com `docker compose up -d`
+        2. Executar ...
+        3. Observar ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afetada
+      options:
+        - API
+        - Carga / ingestão de dados
+        - Banco de dados / schema
+        - Infra (Docker, CI)
+        - Outra
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs ou mensagens de erro
+      description: Cole a saída relevante. O conteúdo é formatado como código automaticamente.
+      render: shell
+
+  - type: input
+    id: ambiente
+    attributes:
+      label: Ambiente
+      description: Sistema operacional, versão do Python e commit ou branch.
+      placeholder: "Ubuntu 24.04, Python 3.11, main@a1b2c3d"
+
+  - type: input
+    id: relacionadas
+    attributes:
+      label: Issues relacionadas
+      placeholder: "Ex.: #12, #15"
