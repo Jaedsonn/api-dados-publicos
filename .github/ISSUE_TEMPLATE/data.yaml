@@ -1,0 +1,77 @@
+name: Dados
+description: Nova fonte, mudança no schema ou inconsistência nos dados
+title: "[Dados] "
+labels: ["dados"]
+body:
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      options:
+        - Nova fonte de dados
+        - Mudança no schema
+        - Inconsistência ou qualidade dos dados
+        - Atualização de carga
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dominio
+    attributes:
+      label: Domínio afetado
+      multiple: true
+      options:
+        - Cadastro de empresas (CNPJ)
+        - Pagamentos de programas
+        - Pessoas expostas politicamente (PEP)
+        - Tabelas de referência (UF, município, país, CNAE etc.)
+        - Novo domínio
+    validations:
+      required: true
+
+  - type: input
+    id: tabelas
+    attributes:
+      label: Tabelas afetadas
+      placeholder: "Ex.: PAGAMENTO, PAGAMENTO_PE_DE_MEIA"
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descrição
+      description: >
+        O que precisa mudar ou o que está errado. Para inconsistências,
+        inclua um exemplo: a consulta, o registro e o valor esperado.
+    validations:
+      required: true
+
+  - type: input
+    id: fonte
+    attributes:
+      label: Fonte
+      description: Origem do dado (URL do conjunto, órgão, periodicidade de publicação).
+
+  - type: textarea
+    id: impacto
+    attributes:
+      label: Impacto no modelo
+      description: >
+        Novas tabelas, colunas, chaves ou relacionamentos; necessidade de
+        recarga ou migração; atualização do `schema.mmd`.
+
+  - type: textarea
+    id: criterios-de-aceite
+    attributes:
+      label: Critérios de aceite
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: input
+    id: origem
+    attributes:
+      label: Issue de origem
+      description: Feature ou bug que motivou esta issue, se houver.
+      placeholder: "Ex.: #10"

@@ -1,0 +1,58 @@
+name: Feature
+description: Nova funcionalidade ou endpoint
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: motivacao
+    attributes:
+      label: Problema ou motivação
+      description: Que necessidade essa feature atende? Quem precisa dela e por quê?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Proposta
+      description: O que deve existir quando a issue for concluída. Descreva o resultado, não a implementação.
+    validations:
+      required: true
+
+  - type: textarea
+    id: criterios-de-aceite
+    attributes:
+      label: Critérios de aceite
+      description: Condições verificáveis para considerar a feature pronta.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas consideradas
+      description: Outros caminhos avaliados e por que foram descartados.
+
+  - type: dropdown
+    id: exige-dados
+    attributes:
+      label: Exige mudança em dados ou schema?
+      description: >
+        Se sim, abra uma issue de Dados e vincule-a a esta: como sub-issue,
+        quando o trabalho de dados faz parte da entrega, ou como dependência
+        ("bloqueada por"), quando ele precisa estar pronto antes.
+      options:
+        - "Não"
+        - "Sim"
+        - "Ainda não sei"
+    validations:
+      required: true
+
+  - type: input
+    id: relacionadas
+    attributes:
+      label: Issues relacionadas
+      placeholder: "Ex.: bloqueada por #12"

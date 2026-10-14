@@ -1,0 +1,50 @@
+name: Tarefa técnica
+description: Infra, CI, refatoração, dependências, testes ou documentação
+title: "[Tarefa] "
+labels: ["tarefa"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - CI/CD
+        - Docker / infra
+        - Dependências
+        - Refatoração
+        - Testes
+        - Documentação
+        - Outra
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Por que essa tarefa é necessária agora.
+    validations:
+      required: true
+
+  - type: textarea
+    id: o-que-fazer
+    attributes:
+      label: O que precisa ser feito
+    validations:
+      required: true
+
+  - type: textarea
+    id: definicao-de-pronto
+    attributes:
+      label: Definição de pronto
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: input
+    id: relacionadas
+    attributes:
+      label: Issues relacionadas
+      placeholder: "Ex.: #12, #15"

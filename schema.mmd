@@ -1,3 +1,4 @@
+%% Tipos MySQL 8 (InnoDB, utf8mb4)
 erDiagram
     PAIS |o--o{ UF : "abrange"
     UF ||--o{ MUNICIPIO : "contém"
@@ -40,71 +41,71 @@ erDiagram
         char(2) sigla PK
         smallint codigo_ibge UK
         smallint pais_codigo FK "nulo se a UF for exterior"
-        text nome
+        varchar(50) nome
     }
     MUNICIPIO {
         int municipio_id PK
         int codigo_siafi UK
         int codigo_ibge UK
-        text nome
+        varchar(100) nome
         char(2) uf_sigla FK
     }
     PAIS {
         smallint codigo PK
-        text nome
+        varchar(100) nome
     }
     CNAE {
         char(7) codigo PK
-        text descricao
+        varchar(255) descricao
     }
     NATUREZA_JURIDICA {
         smallint codigo PK
-        text descricao
+        varchar(255) descricao
     }
     QUALIFICACAO_SOCIO {
         smallint codigo PK
-        text descricao
+        varchar(255) descricao
     }
     PESSOA_FISICA {
         bigint pessoa_id PK
         char(6) cpf_miolo UK "único com nome_normalizado"
-        text nome
-        text nome_normalizado UK "único com cpf_miolo"
+        varchar(255) nome
+        varchar(255) nome_normalizado UK "único com cpf_miolo"
     }
     PESSOA_IDENTIFICADOR {
-        text tipo PK "NIS e futuros"
-        text valor PK
+        varchar(20) tipo PK "NIS e futuros"
+        varchar(50) valor PK
         bigint pessoa_id FK
     }
     EMPRESA {
         char(8) cnpj_basico PK
-        text razao_social
+        varchar(255) razao_social
         smallint natureza_juridica_codigo FK
         smallint qualificacao_responsavel_codigo FK
-        numeric capital_social
+        decimal(20,2) capital_social
         smallint porte
-        text ente_federativo_responsavel
+        varchar(100) ente_federativo_responsavel
         smallint situacao_judicial "derivada da razão social"
     }
     ESTABELECIMENTO {
         char(14) cnpj PK
         char(8) cnpj_basico FK
         smallint matriz_filial
-        text nome_fantasia
+        varchar(255) nome_fantasia
         smallint situacao_cadastral
         date data_situacao_cadastral
         smallint motivo_situacao_cadastral
         date data_inicio_atividade
         char(7) cnae_principal_codigo FK
-        text logradouro "mais tipo, número, complemento e bairro"
+        varchar(255) logradouro "mais tipo, número, complemento e bairro"
         char(8) cep
         char(2) uf_sigla FK
         int municipio_id FK
-        text nome_cidade_exterior
+        varchar(100) nome_cidade_exterior
         smallint pais_codigo FK
-        text telefone1 "mais DDD, telefone2 e fax"
-        text email
-        text situacao_especial
+        varchar(20) telefone1 "mais DDD, telefone2 e fax"
+        varchar(255) email
+        varchar(100) situacao_especial
         date data_situacao_especial
     }
     ESTABELECIMENTO_CNAE_SECUNDARIO {
@@ -113,10 +114,10 @@ erDiagram
     }
     SIMPLES {
         char(8) cnpj_basico PK, FK
-        boolean opcao_simples
+        tinyint(1) opcao_simples
         date data_opcao_simples
         date data_exclusao_simples
-        boolean opcao_mei
+        tinyint(1) opcao_mei
         date data_opcao_mei
         date data_exclusao_mei
     }
@@ -126,7 +127,7 @@ erDiagram
         smallint tipo_socio "1 PJ, 2 PF, 3 estrangeiro"
         bigint pessoa_id FK "quando PF"
         char(8) socio_pj_cnpj_basico FK "quando PJ"
-        text nome_socio
+        varchar(255) nome_socio
         smallint qualificacao_codigo FK
         date data_entrada
         smallint pais_codigo FK
@@ -136,18 +137,18 @@ erDiagram
     }
     PROGRAMA {
         smallint programa_id PK
-        text sigla UK
-        text nome
+        varchar(20) sigla UK
+        varchar(100) nome
     }
     PAGAMENTO {
-        date mes_folha PK "chave de partição"
+        date mes_folha PK
         bigint pagamento_id PK
         smallint programa_id FK
         bigint pessoa_id FK
         int municipio_id FK
         date mes_competencia
         date data_pagamento
-        numeric valor
+        decimal(12,2) valor
     }
     PAGAMENTO_GAS_DO_POVO {
         date mes_folha PK, FK
@@ -164,7 +165,7 @@ erDiagram
         bigint pagamento_id PK, FK
         smallint tipo_parcela "1 matrícula, 2 frequência, 3 conclusão, 4 ENEM"
         date periodo_parcela
-        text etapa_ensino
+        varchar(50) etapa_ensino
         bigint responsavel_pessoa_id FK
     }
     RESUMO_MUNICIPIO_MES {
@@ -173,17 +174,17 @@ erDiagram
         date mes_folha PK
         int qtd_beneficiarios
         int qtd_parcelas
-        numeric valor_total
+        decimal(18,2) valor_total
     }
     FUNCAO {
         int funcao_id PK
-        text sigla
-        text descricao
-        text nivel
+        varchar(50) sigla
+        varchar(255) descricao
+        varchar(50) nivel
     }
     ORGAO {
         int orgao_id PK
-        text nome UK
+        varchar(255) nome UK
     }
     PEP_EXERCICIO {
         bigint pep_exercicio_id PK
